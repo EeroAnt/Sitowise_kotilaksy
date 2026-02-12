@@ -8,15 +8,15 @@ def render_document_filling_UI() -> None:
         process_doc(uploaded_file)
         for field, key in st.session_state["field_mappings"]:
             st.text_input(label=field, key=key)
-        if not st.session_state.get("Submitted", None):
+        if not st.session_state.get("submitted", None):
             if st.button("Submit", type="primary"):
-                st.session_state["Filled_document"] = create_filled_doc(uploaded_file, st.session_state["field_mappings"])
-                st.session_state["Submitted"] = True
+                st.session_state["filled_document"] = create_filled_doc(uploaded_file, st.session_state["field_mappings"])
+                st.session_state["submitted"] = True
                 st.rerun()
-        if st.session_state.get("Submitted", None):
+        if st.session_state.get("submitted", None):
             st.download_button(
                 label="Download filled document",
-                data=st.session_state["Filled_document"],
+                data=st.session_state["filled_document"],
                 file_name="filled_document.docx",
                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             )
