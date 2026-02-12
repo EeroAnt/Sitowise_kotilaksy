@@ -10,7 +10,6 @@ def render_document_filling_UI() -> None:
             st.text_input(label=field, key=key)
         if not st.session_state.get("submitted", None):
             if st.button("Submit", type="primary"):
-                st.session_state["filled_document"] = create_filled_doc(uploaded_file, st.session_state["field_mappings"])
                 st.session_state["submitted"] = True
                 st.rerun()
         if st.session_state.get("submitted", None):
@@ -20,3 +19,7 @@ def render_document_filling_UI() -> None:
                 file_name="filled_document.docx",
                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             )
+            if st.button("Edit again"):
+                st.session_state["filled_document"] = create_filled_doc(uploaded_file, st.session_state["field_mappings"])
+                st.info("Document content refreshed!")
+                st.rerun()
