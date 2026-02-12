@@ -11,3 +11,4 @@ def render_file_upload() -> None:
         if st.button("Upload", type="primary"):
             st.session_state["uploaded_file"] = doc_to_upload
             st.session_state["file_uploaded"] = True
+            st.rerun()
