@@ -1,6 +1,6 @@
 import streamlit as st
 
-def render_file_upload():
+def render_file_upload() -> None:
     doc_to_upload = st.file_uploader(
         "Upload a document",
         type=["docx"],
@@ -9,4 +9,5 @@ def render_file_upload():
     )
     if doc_to_upload is not None:
         if st.button("Upload", type="primary"):
+            st.session_state["uploaded_file"] = doc_to_upload
             st.session_state["file_uploaded"] = True
