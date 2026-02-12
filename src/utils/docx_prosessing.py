@@ -33,3 +33,35 @@ def process_doc(uploaded_file: UploadedFile) -> None:
 
     return
 
+def create_filled_doc(uploaded_file: UploadedFile, field_mappings: list[tuple[str, str]]) -> io.BytesIO:
+    doc = Document(uploaded_file)
+    
+    mapping_iter = iter(field_mappings)
+    pattern = r"\{\{\w+\}\}"
+    
+    # Tables
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for para in cell.paragraphs:
+                    while re.search(pattern, para.text):
+                        original, unique_key = next(mapping_iter)
+                        placeholder = f"{{{{{original}}}}}"
+                        value = st.session_state.get(unique_key, "")
+                        para.text = para.text.replace(placeholder, value, 1)
+
+    # Paragraphs
+
+    for para in doc.paragraphs:
+        while re.search(pattern, para.text):
+            original, unique_key = next(mapping_iter)
+            placeholder = f"{{{{{original}}}}}"
+            value = st.session_state.get(unique_key, "")
+            para.text = para.text.replace(placeholder, value, 1)
+    
+
+    # Save to BytesIO for download
+    buffer = io.BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+    return buffer
